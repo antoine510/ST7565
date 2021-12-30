@@ -22,11 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 // some of this code was written by <cstone@pobox.com> originally; it is in the public domain.
 */
 
-#if ARDUINO >= 100
- #include "Arduino.h"
-#else
- #include "WProgram.h"
-#endif
+#include "Arduino.h"
 
 #define swap(a, b) { uint8_t t = a; a = b; b = t; }
 

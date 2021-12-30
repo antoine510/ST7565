@@ -1,0 +1,30 @@
+########################################################
+# Syntax Coloring Map for ST7565 Library #
+########################################################
+# Class ST7565
+###################################################################
+ST7565	KEYWORD1
+SenseScale KEYWORD1
+
+###################################################################
+# Methods and Functions ST7565
+###################################################################
+st7565_init		KEYWORD2
+begin			KEYWORD2
+st7565_command	KEYWORD2
+st7565_data		KEYWORD2
+st7565_set_brightness	KEYWORD2
+clear_display	KEYWORD2
+clear			KEYWORD2
+display			KEYWORD2
+setpixel		KEYWORD2
+getpixel		KEYWORD2
+fillcircle		KEYWORD2
+drawcircle		KEYWORD2
+drawrect		KEYWORD2
+fillrect		KEYWORD2
+drawline		KEYWORD2
+drawchar		KEYWORD2
+drawstring		KEYWORD2
+drawstring_P	KEYWORD2
+drawbitmap		KEYWORD2
