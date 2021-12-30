@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 //#include <Wire.h>
 #ifdef __AVR__
 #include <avr/pgmspace.h>
+#include <avr/io.h>
 #include <util/delay.h>
 #endif
 
@@ -187,8 +188,7 @@ void ST7565::drawstring_P(uint8_t x, uint8_t line, const char *str) {
 
 void  ST7565::drawchar(uint8_t x, uint8_t line, uint8_t c) {
   for (uint8_t i =0; i<5; i++ ) {
-    st7565_buffer[x + (line*128) ] = pgm_read_byte(font+(c*5)+i);
-    x++;
+    st7565_buffer[x + (line*128) +i] = pgm_read_byte(font +(c*5) +i);
   }
 
   updateBoundingBox(x, line*8, x+5, line*8 + 8);
