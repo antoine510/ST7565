@@ -45,8 +45,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 constexpr uint8_t sid = 9, sclk = 8, a0 = 7, rst = 6, cs = 5;
 constexpr uint8_t sid_bit = 2u, sclk_bit = 1u;
 
-// a 5x7 font table
 const extern uint8_t PROGMEM font[];
+
+constexpr uint8_t font_width = 12;
+constexpr uint8_t font_heightLines = 2;
 
 // the memory buffer for the LCD
 uint8_t st7565_buffer[1024] = { 
@@ -161,12 +163,12 @@ void ST7565::drawstring(uint8_t x, uint8_t line, char *c) {
   while (*c) {
     drawchar(x, line, *c);
     c++;
-    x += 6; // 6 pixels wide
-    if (x >= LCDWIDTH - 6) {
+    x += font_width + 1;
+    if (x + font_width + 1 >= LCDWIDTH) {
       x = 0;    // ran out of this line
-      line++;
+      line += 2;
     }
-    if (line >= (LCDHEIGHT/8))
+    if (line + font_heightLines >= (LCDHEIGHT/8))
       return;        // ran out of space :(
   }
 }
@@ -176,22 +178,24 @@ void ST7565::drawstring_P(uint8_t x, uint8_t line, const char *str) {
   uint8_t c;
   while ((c = pgm_read_byte(str++))) {
     drawchar(x, line, c);
-    x += 6; // 6 pixels wide
-    if (x + 6 >= LCDWIDTH) {
+    x += font_width + 1;
+    if (x + font_width + 1 >= LCDWIDTH) {
       x = 0;    // ran out of this line
-      line++;
+      line += 2;
     }
-    if (line >= (LCDHEIGHT/8))
+    if (line + font_heightLines >= (LCDHEIGHT/8))
       return;        // ran out of space :(
   }
 }
 
 void  ST7565::drawchar(uint8_t x, uint8_t line, uint8_t c) {
-  for (uint8_t i =0; i<5; i++ ) {
-    st7565_buffer[x + (line*128) +i] = pgm_read_byte(font +(c*5) +i);
+  for (uint8_t p = 0; p < font_heightLines; ++p) {
+    for (uint8_t i = 0; i < font_width; ++i) {
+      st7565_buffer[x + ((line + p) * 128) + i] = pgm_read_byte(font + (c * font_width + i + 1) * font_heightLines - p - 1);
+    }
   }
 
-  updateBoundingBox(x, line*8, x+5, line*8 + 8);
+  updateBoundingBox(x, line*8, x+font_width, (line + font_heightLines)*8);
 }
 
 
