@@ -95,14 +95,19 @@ class ST7565 {
   static void drawline(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, 
 		uint8_t color);
   static void drawchar(uint8_t x, uint8_t line, uint8_t c);
+  static void drawchar_aligned(uint8_t x_char, uint8_t line, uint8_t c) { drawchar(x_char * (font_width + 1), line, c); }
   static void drawstring(uint8_t x, uint8_t line, char *c);
+  static void drawstring_aligned(uint8_t x_char, uint8_t line, char *c) { drawstring(x_char * (font_width + 1), line, c); }
   static void drawstring_P(uint8_t x, uint8_t line, const char *c);
+  static void drawstring_P_aligned(uint8_t x_char, uint8_t line, const char *c) { drawstring_P(x_char * (font_width + 1), line, c); }
 
   static void drawbitmap(uint8_t x, uint8_t y, 
 		  const uint8_t *bitmap, uint8_t w, uint8_t h,
 		  uint8_t color);
 
  private:
+  static constexpr uint8_t font_width = 12;
+  static constexpr uint8_t font_heightLines = 2;
   
   static void spiwrite(uint8_t c);
 
