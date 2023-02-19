@@ -42,8 +42,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "ST7565.h"
 
+#define SID_PORT PORTB
+#define SCLK_PORT PORTB
 constexpr uint8_t sid = 9, sclk = 8, a0 = 7, rst = 6, cs = 5;
-constexpr uint8_t sid_bit = 2u, sclk_bit = 1u;
+constexpr uint8_t sid_bit = 1 << 1, sclk_bit = 1 << 0;
 
 const extern uint8_t PROGMEM font[];
 
@@ -92,7 +94,7 @@ void ST7565::drawstring(uint8_t x, uint8_t line, char *c) {
     x += font_width + 1;
     if (x + font_width + 1 >= LCDWIDTH) {
       x = 0;    // ran out of this line
-      line += 2;
+      line += font_heightLines;
     }
     if (line + font_heightLines >= (LCDHEIGHT/8))
       return;        // ran out of space :(
@@ -358,96 +360,63 @@ void ST7565::st7565_init(void) {
 }
 
 inline void ST7565::spiwrite(uint8_t c) {
-    
-/*#if not defined (_VARIANT_ARDUINO_DUE_X_) && not defined (_VARIANT_ARDUINO_ZERO_)
-    shiftOut(sid, sclk, MSBFIRST, c);
-#else
-    int8_t i;
-    for (i=7; i>=0; i--) {
-        digitalWrite(sclk, LOW);
-        //delayMicroseconds(5);      //need to slow down the data rate for Due and Zero
-        if (c & _BV(i))
-            digitalWrite(sid, HIGH);
-        else
-            digitalWrite(sid, LOW);
-  //      delayMicroseconds(5);      //need to slow down the data rate for Due and Zero
-        digitalWrite(sclk, HIGH);
-    }
-#endif*/
-  /*
-  int8_t i;
-  for (i=7; i>=0; i--) {
-    SCLK_PORT &= ~_BV(SCLK);
-    if (c & _BV(i))
-      SID_PORT |= _BV(SID);
-    else
-      SID_PORT &= ~_BV(SID);
-    SCLK_PORT |= _BV(SCLK);
-  }
-  */
-
-  
-  // loop unwrapped! too fast doesnt work :(
- 
-  PORTB &= ~sclk_bit;
+  SCLK_PORT &= ~sclk_bit;
   if (c & _BV(7))
-    PORTB |= sid_bit;
+    SID_PORT |= sid_bit;
   else
-    PORTB &= ~sid_bit;
-  PORTB |= sclk_bit;
+    SID_PORT &= ~sid_bit;
+  SCLK_PORT |= sclk_bit;
 
-  PORTB &= ~sclk_bit;
+  SCLK_PORT &= ~sclk_bit;
   if (c & _BV(6))
-    PORTB |= sid_bit;
+    SID_PORT |= sid_bit;
   else
-    PORTB &= ~sid_bit;
-  PORTB |= sclk_bit;
+    SID_PORT &= ~sid_bit;
+  SCLK_PORT |= sclk_bit;
  
-  PORTB &= ~sclk_bit;
+  SCLK_PORT &= ~sclk_bit;
   if (c & _BV(5))
-    PORTB |= sid_bit;
+    SID_PORT |= sid_bit;
   else
-    PORTB &= ~sid_bit;
-  PORTB |= sclk_bit;
+    SID_PORT &= ~sid_bit;
+  SCLK_PORT |= sclk_bit;
 
-  PORTB &= ~sclk_bit;
+  SCLK_PORT &= ~sclk_bit;
   if (c & _BV(4))
-    PORTB |= sid_bit;
+    SID_PORT |= sid_bit;
   else
-    PORTB &= ~sid_bit;
-  PORTB |= sclk_bit;
+    SID_PORT &= ~sid_bit;
+  SCLK_PORT |= sclk_bit;
 
-  PORTB &= ~sclk_bit;
+  SCLK_PORT &= ~sclk_bit;
   if (c & _BV(3))
-    PORTB |= sid_bit;
+    SID_PORT |= sid_bit;
   else
-    PORTB &= ~sid_bit;
-  PORTB |= sclk_bit;
+    SID_PORT &= ~sid_bit;
+  SCLK_PORT |= sclk_bit;
 
-  PORTB &= ~sclk_bit;
+  SCLK_PORT &= ~sclk_bit;
   if (c & _BV(2))
-    PORTB |= sid_bit;
+    SID_PORT |= sid_bit;
   else
-    PORTB &= ~sid_bit;
-  PORTB |= sclk_bit;
+    SID_PORT &= ~sid_bit;
+  SCLK_PORT |= sclk_bit;
 
-
-  PORTB &= ~sclk_bit;
+  SCLK_PORT &= ~sclk_bit;
   if (c & _BV(1))
-    PORTB |= sid_bit;
+    SID_PORT |= sid_bit;
   else
-    PORTB &= ~sid_bit;
-  PORTB |= sclk_bit;
+    SID_PORT &= ~sid_bit;
+  SCLK_PORT |= sclk_bit;
 
-  PORTB &= ~sclk_bit;
+  SCLK_PORT &= ~sclk_bit;
   if (c & _BV(0))
-    PORTB |= sid_bit;
+    SID_PORT |= sid_bit;
   else
-    PORTB &= ~sid_bit;
-  PORTB |= sclk_bit;
-
-
+    SID_PORT &= ~sid_bit;
+  SCLK_PORT |= sclk_bit;
 }
+
 void ST7565::st7565_command(uint8_t c) {
   digitalWrite(a0, LOW);
 
