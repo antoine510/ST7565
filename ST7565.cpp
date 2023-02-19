@@ -42,10 +42,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "ST7565.h"
 
+// Standard Arduino
+//#define SID_PORT PORTB
+//#define SCLK_PORT PORTB
+//constexpr uint8_t sid = 9, sclk = 8, a0 = 7, rst = 6, cs = 5;
+//constexpr uint8_t sid_bit = 1 << 1, sclk_bit = 1 << 0;
+
+// MPPTino v2
 #define SID_PORT PORTB
-#define SCLK_PORT PORTB
-constexpr uint8_t sid = 9, sclk = 8, a0 = 7, rst = 6, cs = 5;
-constexpr uint8_t sid_bit = 1 << 1, sclk_bit = 1 << 0;
+#define SCLK_PORT PORTD
+constexpr uint8_t sid = 8, sclk = 7, a0 = 6, rst = 5;
+constexpr uint8_t sid_bit = 1 << 0, sclk_bit = 1 << 7;
 
 const extern uint8_t PROGMEM font[];
 
@@ -312,11 +319,6 @@ void ST7565::st7565_init(void) {
   pinMode(sclk, OUTPUT);
   pinMode(a0, OUTPUT);
   pinMode(rst, OUTPUT);
-  pinMode(cs, OUTPUT);
-
-  // toggle RST low to reset; CS low so it'll listen to us
-  if (cs > 0)
-    digitalWrite(cs, LOW);
 
   digitalWrite(rst, LOW);
   _delay_ms(500);
